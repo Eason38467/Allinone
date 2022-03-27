@@ -1,3 +1,10 @@
 # Allinone
 
-this is my study note.
+This is my study note.
+
+Include:
+- Ansible
+- basic python 
+- Neimiko
+- Nornir
+- Terraform
