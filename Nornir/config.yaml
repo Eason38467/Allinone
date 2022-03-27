@@ -1,0 +1,14 @@
+#this is nornir config file
+
+---
+inventory:
+      plugin: SimpleInventory #plugin: SimpleInventory，我们就用默认的即可，它的意思是用SimpleInventory这个插件来加载清单。
+      options:
+          host_file: "inventory/hosts.yaml"  #存放设备信息
+          group_file: "inventory/groups.yaml" #存放组信息
+          defaults_file: "inventory/defaults.yaml" #存放缺省信息
+
+runner:
+    plugin: threaded
+    options:
+        num_workers: 100  #启动多线程，默认为20

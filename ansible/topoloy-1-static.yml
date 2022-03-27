@@ -1,0 +1,207 @@
+
+#  pc----E1/4 N9K-7 E1/2------E1/7 N9K4 E1/4  -----E1/4 N9K-5 E1/7 ----E1/1 N9K E1/4 ----PC
+---
+- name: topology 1 static non-svi
+  hosts: static
+  gather_facts: no
+  connection: local
+
+  tasks:
+
+    - name: config hostname
+      nxos_config:
+        lines: hostname {{ inventory_hostname }}
+        save_when: always
+
+    - name: default ports
+      cisco.nxos.nxos_interfaces:
+        config:
+          - name: Ethernet1/1
+          - name: Ethernet1/2
+          - name: Ethernet1/3
+          - name: Ethernet1/4
+          - name: Ethernet1/5
+          - name: Ethernet1/6
+          - name: Ethernet1/7
+          - name: Ethernet1/8
+        state: deleted
+
+    - name: shutdown unused ports
+      cisco.nxos.nxos_interfaces:
+        config:
+          - name: Ethernet1/1
+            enabled: false
+          - name: Ethernet1/2
+            enabled: false
+          - name: Ethernet1/3
+            enabled: false
+          - name: Ethernet1/4
+            enabled: false
+          - name: Ethernet1/5
+            enabled: false
+          - name: Ethernet1/6
+            enabled: false
+          - name: Ethernet1/7
+            enabled: false
+          - name: Ethernet1/8
+            enabled: false
+
+
+- name: router-1 configuration
+  hosts: Router-1
+  gather_facts: no
+  connection: local
+
+  tasks:
+    - name: enable port
+      cisco.nxos.nxos_interfaces:
+        config:
+          - name: Ethernet1/4
+            description: To-Router-2
+            mode: layer3
+            enabled: true
+          - name: Ethernet1/7
+            description: To-Router-3
+            mode: layer3
+            enabled: true
+    - name: enable IP address
+      cisco.nxos.nxos_l3_interfaces:
+        config:
+          - name: Ethernet1/4
+            ipv4:
+              - address: 12.1.1.1/24
+            redirects: false
+            unreachables: false
+          - name: Ethernet1/7
+            ipv4:
+              - address: 13.1.1.1/24
+            redirects: false
+            unreachables: false
+
+    - name: add static route
+      cisco.nxos.nxos_config:
+        lines:
+          - ip route 42.1.1.0/24 12.1.1.2
+          - ip route 31.1.1.0/24 13.1.1.3
+
+
+- name: router-2 configuration
+  hosts: Router-2
+  gather_facts: no
+  connection: local
+
+  tasks:
+    - name: enable port
+      cisco.nxos.nxos_interfaces:
+        config:
+          - name: Ethernet1/4
+            description: To-Router-1
+            mode: layer3
+            enabled: true
+          - name: Ethernet1/7
+            description: To-Router-4
+            mode: layer3
+            enabled: true
+    - name: enable IP address
+      cisco.nxos.nxos_l3_interfaces:
+        config:
+          - name: Ethernet1/4
+            ipv4:
+              - address: 12.1.1.2/24
+            redirects: false
+            unreachables: false
+          - name: Ethernet1/7
+            ipv4:
+              - address: 24.1.1.2/24
+            redirects: false
+            unreachables: false
+
+    - name: add static route
+      cisco.nxos.nxos_config:
+        lines:
+          - ip route 42.1.1.0/24 24.1.1.4
+          - ip route 31.1.1.0/24 12.1.1.1
+
+- name: router-3 configuration
+  hosts: Router-3
+  gather_facts: no
+  connection: local
+
+  tasks:
+    - name: enable port
+      cisco.nxos.nxos_interfaces:
+        config:
+          - name: Ethernet1/2
+            description: To-Router-1
+            mode: layer3
+            enabled: true
+          - name: Ethernet1/4
+            description: To-PC-31-1
+            mode: layer3
+            enabled: true
+    - name: enable IP address
+      cisco.nxos.nxos_l3_interfaces:
+        config:
+          - name: Ethernet1/4
+            ipv4:
+              - address: 31.1.1.3/24
+            redirects: false
+            unreachables: false
+          - name: Ethernet1/2
+            ipv4:
+              - address: 13.1.1.3/24
+            redirects: false
+            unreachables: false
+
+    - name: add static route
+      cisco.nxos.nxos_config:
+        lines:
+          - ip route 42.1.1.0/24 13.1.1.1
+
+- name: router-4 configuration
+  hosts: Router-4
+  gather_facts: no
+  connection: local
+
+  tasks:
+    - name: enable port
+      cisco.nxos.nxos_interfaces:
+        config:
+          - name: Ethernet1/1
+            description: To-Router-2
+            mode: layer3
+            enabled: true
+          - name: Ethernet1/4
+            description: To-PC-42-1
+            mode: layer3
+            enabled: true
+    - name: enable IP address
+      cisco.nxos.nxos_l3_interfaces:
+        config:
+          - name: Ethernet1/1
+            ipv4:
+              - address: 24.1.1.4/24
+            redirects: false
+            unreachables: false
+          - name: Ethernet1/4
+            ipv4:
+              - address: 42.1.1.4/24
+            redirects: false
+            unreachables: false
+
+    - name: add static route
+      cisco.nxos.nxos_config:
+        lines:
+          - ip route 31.1.1.0/24 24.1.1.2
+
+- name: save config
+  hosts: static
+  gather_facts: no
+  connection: local
+
+  tasks:
+
+    - name: config hostname
+      nxos_config:
+        save_when: always
+

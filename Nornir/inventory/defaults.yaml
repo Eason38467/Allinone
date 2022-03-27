@@ -1,0 +1,8 @@
+#defaults.yaml的作用是用来填补hosts.yaml里遗漏的参数(等下讲hosts.yaml时会讲到它的作用)，这里我们在defaults.yaml中定义了用来供Nornir通过SSH登录实验中要用到的5台交换机的用户名和密码。
+#注意：如果密码里含有数字，则必须加引号，比如password: '123'，如果不含数字或者是字母+数字（字母开头或者数字开头都无所谓）的组合，则无须加引号，
+#比如密码是python的话，可以写成password: python，密码是python123或者123python的话可以写成password: python123和password: 123python均没问题。
+
+---
+username: admin
+password: cisco!123
+

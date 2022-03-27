@@ -1,0 +1,25 @@
+
+#name: 给剧本命名，我们要读取5个SW的ARP表的内容，故这里取名为Get ARP information
+#hosts: 指定被执行命令的主机，也就是我们的5个SW，实验2里已经讲到了all是什么意思。
+#gather_facts: 在ansible里面，facts是用来“发现”远程主机的各种已有的参数的，默认状态下是自动执行的，这个很耗时间，而且对我们的网络设备没什么用。gahter_facts代表一个布尔值，用来表示是否要启用facts这个模块，由于我们不会用到facts，所以这里将gather_facts设置成false。
+#tasks: 顾名思义，就是“剧情”，也就是我们要对要访问的远程设备做什么。
+#- name: 给剧情命名，这里取名show arp
+#raw: 实验1讲到了这是raw模块，后面的"show arp"则是我们真正要在SW1-SW5上执行的命令。
+#register: 将执行命令后输出的结果保存的意思，这里将它们保存给一个叫print_output的变量。
+#- debug: var=print_output.stoudt_lines, 表示将print_output的内容打印出来。
+
+---
+- name: Get ARP information
+  hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: show arp
+      raw: "show ip arp vrf all"
+
+      register: print_output
+
+    - debug: var=print_output.stdout_lines
+
+    - name: save output to a file
+      copy: content="{{ print_output.stdout[0] }}" dest="./{{ inventory_hostname }}.txt"

@@ -1,0 +1,7 @@
+---
+
+  nxos_provider:
+    username: "{{ user }}"
+    password: "{{ pwd }}"
+    connection: local
+    host: "{{ inventory_hostname }}"

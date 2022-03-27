@@ -1,0 +1,146 @@
+
+----------修改hostname
+hostname N9K-1
+
+
+--------开启feature
+
+feature nxapi
+feature bash-shell
+feature sftp-server
+
+feature ospf
+feature bgp
+feature pim
+feature netconf
+feature restconf
+feature grpc
+feature interface-vlan
+feature vn-segment-vlan-based
+feature lacp
+feature nv overlay
+
+nv overlay evpn
+
+---------配置vlan和vlan描述
+
+vlan 10
+  vn-segment 10010
+vlan 20
+  vn-segment 10020
+vlan 100
+  vn-segment 10100
+
+-------------激活接口和接口描述
+interface Ethernet1/1
+  speed 10000
+  channel-group 30 mode active
+  no shutdown
+
+interface Ethernet1/2
+  speed 10000
+  channel-group 30 mode active
+  no shutdown
+
+interface port-channel30
+  speed 10000
+  ip address 21.1.1.1/24
+  ip router ospf 100 area 0.0.0.0
+  ip pim sparse-mode
+
+interface loopback0
+  ip address 1.1.1.1/32
+  ip router ospf 100 area 0.0.0.0
+
+
+------------配置vrf
+
+vrf context vlan100
+  vni 10100
+  rd auto
+  address-family ipv4 unicast
+    route-target both auto
+    route-target both auto evpn
+  address-family ipv6 unicast
+    route-target both auto
+    route-target both auto evpn
+
+
+-----------激活svi
+interface Vlan10
+  no shutdown
+  vrf member vlan100
+  ip address 10.1.1.1/24
+  fabric forwarding mode anycast-gateway
+
+interface Vlan20
+  no shutdown
+  vrf member vlan100
+  ip address 20.1.1.1/24
+  fabric forwarding mode anycast-gateway
+
+interface Vlan100
+  no shutdown
+  vrf member vlan100
+  ip forward
+
+
+--------配置pim
+
+ip pim rp-address 100.1.1.1 group-list 224.0.0.0/4
+ip pim ssm range 232.0.0.0/8
+
+
+interface port-channel30
+  ip pim sparse-mode
+
+-------配置ospf
+
+router ospf 100
+
+interface port-channel30
+  ip router ospf 100 area 0.0.0.0
+
+
+interface loopback0
+  ip router ospf 100 area 0.0.0.0
+
+
+----------配置bgp
+
+router bgp 100
+  router-id 1.1.1.1
+  neighbor 2.2.2.2
+    remote-as 100
+    update-source loopback0
+    address-family l2vpn evpn
+      send-community
+      send-community extended
+evpn
+  vni 10010 l2
+    rd auto
+    route-target import auto
+    route-target export auto
+  vni 10020 l2
+    rd auto
+    route-target import auto
+    route-target export auto
+
+
+
+-----------配置vni和nve
+fabric forwarding anycast-gateway-mac 0000.0002.0003
+
+
+
+interface nve1
+  no shutdown
+  host-reachability protocol bgp
+  source-interface loopback0
+  global mcast-group 239.0.0.1 L2
+  member vni 10010
+  member vni 10020
+  member vni 10100 associate-vrf
+
+
+

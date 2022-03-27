@@ -1,0 +1,37 @@
+[switches]
+192.168.51.31
+192.168.51.32
+192.168.51.33
+192.168.51.34
+192.168.51.35
+192.168.51.36
+192.168.51.37
+192.168.51.38
+
+[static]
+Router-1 ansible_host=192.168.51.34
+Router-2 ansible_host=192.168.51.35
+Router-3 ansible_host=192.168.51.37
+Router-4 ansible_host=192.168.51.38
+
+[vxlanspine]
+ROG-Spine-N9K-1 ansible_host=192.168.50.101
+ROG-Spine-N9K-2 ansible_host=192.168.50.102
+
+[vxlanleaf]
+ROG-Leaf-N9K-1 ansible_host=192.168.50.103
+ROG-Leaf-N9K-2 ansible_host=192.168.50.104
+ROG-Leaf-N9K-3 ansible_host=192.168.50.105
+ROG-Leaf-N9K-4 ansible_host=192.168.50.106
+
+[nxos:children]
+vxlanspine
+vxlanleaf
+static
+
+[nxos:vars]
+ansible_ssh_pass='cisco!123'
+ansible_ssh_user='admin'
+ansible_connection=network_cli
+ansible_network_os='nxos'
+

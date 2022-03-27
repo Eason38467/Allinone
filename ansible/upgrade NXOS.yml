@@ -1,0 +1,23 @@
+---
+
+- name: upgrade nxos
+  hosts: all
+  gather_facts: no
+  connection: local
+
+  tasks:
+
+    - name: copy image file from ftp server
+      nxos_file_copy:
+        file_pull: true
+        file_pull_protocol: ftp
+        local_file: nxos.9.3.1.bin
+        remote_file: nxos.9.3.1.bin
+        remote_scp_server: 192.168.10.1
+        remote_scp_server_user: myuser
+        remote_scp_server_password: mypass
+        vrf: management
+
+
+
+        

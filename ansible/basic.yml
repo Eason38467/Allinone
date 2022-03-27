@@ -1,0 +1,35 @@
+#这是基础配置，负责恢复成默认配置， 配置默认banner
+
+---
+
+- name: default banner
+  hosts: all
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: apply default conf
+      cisco.nxos.nxos_config:
+        replace_src: default-conf
+        replace: config
+        save_when: always
+
+
+    - name: config default banner
+      cisco.nxos.nxos_banner:
+        banner: motd
+        text: |
+          
+          -----------------------------------------------------
+          \     ^__^
+           \    (oo)\_______
+               (__)\       )\/\
+                  ||----w |
+                  ||     ||
+
+          This Device is idle!
+          PLEASE DO NOT DELETE 'default-conf' IN BOOTFLASH
+        state: present
+
+
+

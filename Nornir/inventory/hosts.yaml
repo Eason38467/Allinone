@@ -1,0 +1,40 @@
+---
+
+sw1:
+  hostname: 192.168.51.31
+  platform: nxos
+  groups:
+    - cisco
+  data:
+    site: dl
+    role: r1
+    type: static
+
+sw2:
+  hostname: 192.168.51.32
+  platform: nxos
+
+sw3:
+  hostname: 192.168.51.33
+  platform: nxos
+
+sw4:
+  hostname: 192.168.51.34
+  platform: nxos
+
+sw5:
+  hostname: 192.168.51.35
+  platform: nxos
+
+sw6:
+  hostname: 192.168.51.36
+  platform: nxos
+
+
+sw7:
+  hostname: 192.168.51.37
+  platform: nxos
+
+sw8:
+  hostname: 192.168.51.38
+  platform: nxos
