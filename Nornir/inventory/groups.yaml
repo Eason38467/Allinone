@@ -3,3 +3,12 @@
 ---
 cisco:
   platform: nxos
+
+static:
+  platform: nxos
+
+leaf:
+  platform: nxos
+
+spine:
+  platform: nxos

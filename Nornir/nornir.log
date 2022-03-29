@@ -1,3 +1,7 @@
 2022-03-26 10:35:42,466 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['facts', 'interfaces']} on 2 hosts
 2022-03-26 10:38:48,361 -  nornir.core -     INFO -        run() - Running task 'napalm_get' with args {'getters': ['facts', 'interfaces']} on 2 hosts
 2022-03-27 19:12:13,610 -  nornir.core -     INFO -        run() - Running task 'netmiko_send_command' with args {'command_string': 'show clock'} on 8 hosts
+2022-03-28 22:12:04,058 -  nornir.core -  WARNING -        run() - Task 'netmiko_send_command' has not been run – 0 hosts selected
+2022-03-28 22:12:43,693 -  nornir.core -     INFO -        run() - Running task 'netmiko_send_command' with args {'command_string': 'show clo'} on 4 hosts
+2022-03-28 22:13:56,350 -  nornir.core -     INFO -        run() - Running task 'netmiko_send_command' with args {'command_string': 'show clo'} on 4 hosts
+2022-03-28 22:14:35,926 -  nornir.core -     INFO -        run() - Running task 'netmiko_send_command' with args {'command_string': 'show ip int bri'} on 4 hosts
